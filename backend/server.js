@@ -3,6 +3,7 @@ dotenv.config();
 import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import errorHandler from "./middlewares/errorHandler.js";
 import { protect, restrictTo } from "./middlewares/authMiddleware.js";
@@ -14,7 +15,6 @@ import userRoutes from "./routes/userRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 
 import { createServer } from "http";
-
 import { initSocket } from "./socket/socket.js";
 
 const app = express();
@@ -26,6 +26,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use(cors({
+  origin: process.env.FRONTEND_BASE_URL,
+  credentials: true,
+}));
+
 app.use("/uploads", express.static("uploads"));
 
 await mongoose
@@ -36,7 +41,6 @@ await mongoose
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-
 
 
 app.use("/api/v1/auth", authRoutes);
