@@ -2,6 +2,7 @@ import { useState } from "react";
 import validator from "validator";
 import api from "../api/axios.js";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext.jsx";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -19,6 +20,8 @@ export default function Signup() {
   });
 
   const navigate = useNavigate();
+
+  const { user, setAuth } = useAuth();
 
   const startedTypingPassword = password.length > 0;
 
@@ -60,8 +63,11 @@ export default function Signup() {
         email,
         password,
       });
-
       console.log(res);
+
+      setAuth({_id: res.data?._id});
+      navigate("/verifyemail");
+
     } catch (err) {
       setError(err.response?.data?.message || "Signup Failed");
     } finally {
