@@ -7,10 +7,24 @@ export default function VerifyEmail() {
     const [otp, setOTP] = useState("");
     const { user, setAuth } = useAuth();
     const [error, setError] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleSubmit = async () => {
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+
         try {
+            setLoading(true);
             setError(null);
+
+            if (!user?._id) {
+                navigate("/signup");
+                return;
+            }
 
             const res = await api.post("/auth/verify", {
                 _id: user._id,
@@ -18,8 +32,12 @@ export default function VerifyEmail() {
             });
 
             console.log(res);
-        } catch (error) {
+            navigate("/complete-profile");
+        } catch (err) {
             setError(err.response?.data?.message || "Email verification failed.");
+        } finally {
+            setIsSubmitting(false);
+            setLoading(false);
         }
     };
 
@@ -27,18 +45,28 @@ export default function VerifyEmail() {
         if (otp.length === 6) {
             handleSubmit();
         }
-    });
+    }, [otp]);
 
     return (
         <div>
             <p>Please enter the 6 digit OTP sent to your email</p>
             <form>
                 <input 
-                    type="password"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]"
+                    maxLength={6}
                     value={otp}
-                    onChange={(e) => setOTP(e.target.value)}
+                    disabled={loading}
+                    onChange={(e) => 
+                        setOTP(e.target.value.replace(/\D/g, ""))
+                    }
                 />
             </form>
+
+            {loading && <p>Verifying OTP...</p>}
+
+            {error && <h3>{error}</h3>}
         </div>
     );
 }

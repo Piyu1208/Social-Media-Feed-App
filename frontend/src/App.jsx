@@ -3,6 +3,7 @@ import './App.css'
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Signup from "./pages/Signup.jsx";
 import VerifyEmail from "./pages/VerifyEmail.jsx";
+import CompleteProfile from "./pages/CompleteProfile.jsx";
 
 function App() {
 
@@ -11,7 +12,8 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route path="/" element={<Signup />} />
-      <Route path="/verifyemail" element={<VerifyEmail />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/complete-profile" element={<CompleteProfile />} />
     </Routes>
     </BrowserRouter>
     </>

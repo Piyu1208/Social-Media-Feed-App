@@ -66,7 +66,7 @@ export default function Signup() {
       console.log(res);
 
       setAuth({_id: res.data?._id});
-      navigate("/verifyemail");
+      navigate("/verify-email");
 
     } catch (err) {
       setError(err.response?.data?.message || "Signup Failed");
