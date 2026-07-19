@@ -28,8 +28,7 @@ export default function Signup() {
   const emailError =
     email && !validator.isEmail(email) ? "Please enter a valid email." : "";
 
-  const passwordValid =
-    password && !validator.isStrongPassword(password);
+  const passwordValid = password && !validator.isStrongPassword(password);
 
   const confirmPasswordError =
     confirmPassword && password !== confirmPassword
@@ -65,9 +64,8 @@ export default function Signup() {
       });
       console.log(res);
 
-      setAuth({_id: res.data?._id});
+      setAuth({ _id: res.data?._id });
       navigate("/verify-email");
-
     } catch (err) {
       setError(err.response?.data?.message || "Signup Failed");
     } finally {
@@ -77,9 +75,9 @@ export default function Signup() {
 
   return (
     <div>
+      <h2>Create Account</h2>
+      <p>Sign up to continue</p>
       <form onSubmit={handleSubmit}>
-        <h2>Create Account</h2>
-        <p>Sign up to continue</p>
         <input
           name="email"
           type="email"
@@ -115,10 +113,7 @@ export default function Signup() {
           <p>{confirmPasswordError}</p>
         )}
 
-        <button
-          type="button"
-          onClick={() => setShowPassword(prev => !prev)}
-        >
+        <button type="button" onClick={() => setShowPassword((prev) => !prev)}>
           {showPassword ? "Hide" : "Show"}
         </button>
 
@@ -126,17 +121,34 @@ export default function Signup() {
           {loading ? "Signing up..." : "Signup"}
         </button>
 
+        <button onClick={(e) => navigate("/login")}>Go to Login page</button>
+
         {error ? <h3>{error}</h3> : null}
       </form>
 
       <div>
         <p>Password must contain:</p>
         <div>
-          <p>{startedTypingPassword ? checks.length ? "✅" : "❌" : "•"} At least 8 characters</p>
-          <p>{startedTypingPassword ? checks.uppercase ? "✅" : "❌" : "•"} One uppercase letter</p>
-          <p>{startedTypingPassword ? checks.lowercase ? "✅" : "❌" : "•"} One lowercase letter</p>
-          <p>{startedTypingPassword ? checks.number ? "✅" : "❌" : "•"} One number</p>
-          <p>{startedTypingPassword ? checks.special ? "✅" : "❌" : "•"} One special character</p>
+          <p>
+            {startedTypingPassword ? (checks.length ? "✅" : "❌") : "•"} At
+            least 8 characters
+          </p>
+          <p>
+            {startedTypingPassword ? (checks.uppercase ? "✅" : "❌") : "•"} One
+            uppercase letter
+          </p>
+          <p>
+            {startedTypingPassword ? (checks.lowercase ? "✅" : "❌") : "•"} One
+            lowercase letter
+          </p>
+          <p>
+            {startedTypingPassword ? (checks.number ? "✅" : "❌") : "•"} One
+            number
+          </p>
+          <p>
+            {startedTypingPassword ? (checks.special ? "✅" : "❌") : "•"} One
+            special character
+          </p>
         </div>
       </div>
     </div>
