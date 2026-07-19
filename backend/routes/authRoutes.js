@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post("/signup", signup);
 router.post("/verify", verifyEmail);
-router.post("/complete-profile", upload.single("file"), completeProfile);
+router.post("/complete-profile", upload.single("profilePicture"), completeProfile);
 router.post("/login", login);
 router.post("/logout", logout);
 

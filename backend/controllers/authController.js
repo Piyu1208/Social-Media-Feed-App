@@ -118,7 +118,7 @@ export const verifyEmail = async (req, res, next) => {
 export const completeProfile = async (req, res, next) => {
   try {
     const { _id, username } = req.body;
-
+    
     const tempUser = await TempUser.findById(_id).select("+password");
 
     if (!tempUser) {
