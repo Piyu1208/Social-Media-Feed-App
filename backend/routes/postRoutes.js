@@ -9,10 +9,10 @@ const router = express.Router();
 
 router.get("/posts/feed", feed);
 
-router.post("/posts", upload.array("files", 5), createPost);
+router.post("/posts", upload.array("images", 5), createPost);
 router.get("/posts", getPosts);
 router.get("/posts/:id", getPost);
-router.patch("/posts/:id", upload.array("files", 5), updatePost);
+router.patch("/posts/:id", upload.array("images", 5), updatePost);
 router.delete("/posts/:id", deletePost);
 
 router.patch("/posts/:id/like", likePost);
