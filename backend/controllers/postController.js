@@ -9,6 +9,7 @@ import {
   deleteFromCloudinary,
 } from "../utils/imageUploadUtils.js";
 import { getIO, getSocketId } from "../socket/socket.js";
+import mongoose from "mongoose";
 
 export const createPost = async (req, res, next) => {
   try {
@@ -216,6 +217,10 @@ export const unlikePost = async (req, res, next) => {
 };
 
 export const createComment = async (req, res, next) => {
+  let session;
+  let comment;
+  let post;
+
   try {
     let { text } = req.body;
 
@@ -225,20 +230,26 @@ export const createComment = async (req, res, next) => {
       throw new AppError("Comment cannot be empty", 400);
     }
 
-    const post = await Post.findById(req.params.id);
+    session = await mongoose.startSession();
 
-    if (!post) {
+    await session.withTransaction(async () => {
+      post = await Post.findById(req.params.id).session(session);
+
+      if (!post) {
         throw new AppError("Post not found.", 404);
-    }
+      }
 
-    const comment = await Comment.create({
-      post: req.params.id,
-      author: req.user._id,
-      text,
+      [comment] = await Comment.create([{
+            post: post._id,
+            author: req.user._id,
+            text,
+      }], { session });
+
+      post.commentCount += 1;
+      await post.save({session});    
     });
 
-    
-    if (comment.author.toString() !== post.author.toString()) {
+    if (comment.author.equals(post.author)) {
       const notification = await Notification.create({
         recipient: post.author,
         sender: comment.author,
@@ -261,6 +272,10 @@ export const createComment = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  } finally {
+    if (session) {
+      await session.endSession();
+    }
   }
 };
 
@@ -283,7 +298,9 @@ export const feed = async (req, res, next) => {
       author: {
         $in: req.user.following,
       },
-    }).populate("author", "username profilePicture").sort({ createdAt: -1 });
+    })
+      .populate("author", "username profilePicture")
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
