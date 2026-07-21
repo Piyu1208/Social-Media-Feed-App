@@ -1,4 +1,3 @@
-
 import "./PostCard.css";
 
 export default function PostCard({
@@ -7,15 +6,12 @@ export default function PostCard({
   images,
   caption,
   likes,
+  comments,
 }) {
   return (
     <div className="post-card">
       <div className="post-header">
-        <img
-          className="profile-pic"
-          src={profilePicture?.url}
-          alt={username}
-        />
+        <img className="profile-pic" src={profilePicture?.url} alt={username} />
 
         <p className="username">{username}</p>
       </div>
@@ -32,12 +28,15 @@ export default function PostCard({
           ))}
       </div>
 
-      <div className="post-content">
-        <p className="caption">{caption}</p>
-
-        <div className="post-actions">
+      <div className="post-actions">
+        <div className="action-group">
           <button className="like-btn">🩵 Like</button>
           <span className="likes">{likes} likes</span>
+        </div>
+
+        <div className="action-group">
+          <button className="comment-btn">💬 Comment</button>
+          <span className="comments">{comments} comments</span>
         </div>
       </div>
     </div>

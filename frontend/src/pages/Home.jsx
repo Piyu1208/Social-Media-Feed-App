@@ -100,6 +100,7 @@ export default function Home() {
                     caption={post.caption}
                     images={post.images}
                     likes={post.likes.length}
+                    comments={post.commentCount}
                     />
                 ))
             )}

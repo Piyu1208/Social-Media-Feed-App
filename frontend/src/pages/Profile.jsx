@@ -56,6 +56,7 @@ export default function Profile() {
                   caption={post.caption}
                   images={post.images}
                   likes={post.likes.length}
+                  comments={post.commentCount}
                 />
               ))}
           </div>
