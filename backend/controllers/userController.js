@@ -7,6 +7,29 @@ import mongoose from "mongoose";
 import { upload, uploadToCloudinary, deleteFromCloudinary } from "../utils/imageUploadUtils.js";
 import { getIO, getSocketId } from "../socket/socket.js";
 
+
+
+export const getMe = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      throw new AppError("User not found.", 404);
+    }
+
+    const posts = await Post.find({ author: req.user._id }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      user,
+      posts,
+    });
+    
+  } catch (error) {
+    next(error);
+  }
+}
+
 export const visitProfile = async (req, res, next) => {
   try {
     let username = req.params.username;
