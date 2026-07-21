@@ -283,7 +283,7 @@ export const feed = async (req, res, next) => {
       author: {
         $in: req.user.following,
       },
-    }).sort({ createdAt: -1 });
+    }).populate("author", "username profilePicture").sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
