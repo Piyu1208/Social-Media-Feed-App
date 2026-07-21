@@ -13,7 +13,7 @@ export default function PostCard({
       <div className="post-header">
         <img
           className="profile-pic"
-          src={profilePicture.url}
+          src={profilePicture?.url}
           alt={username}
         />
 

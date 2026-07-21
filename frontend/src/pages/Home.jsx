@@ -14,6 +14,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
 
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchFeed();

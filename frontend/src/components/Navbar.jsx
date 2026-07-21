@@ -1,8 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 export default function Navbar() {
-    const navigate = useNavigate();
+
 
     return (
         <header>
@@ -11,7 +11,7 @@ export default function Navbar() {
             <nav>
                 <button>Search</button>
                 <button>Notifications</button>
-                <button>Profile</button>
+                <Link to="/profile">Profile</Link>
             </nav>
         </header>
     );
