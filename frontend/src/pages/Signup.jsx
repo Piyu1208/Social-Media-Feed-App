@@ -12,6 +12,14 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+
+import { AlertCircleIcon } from "lucide-react"
+
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -82,8 +90,8 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-8">
-      <div className="w-full max-w-3xl rounded-xl border bg-white p-6 shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
+      <div className="w-full max-w-3xl rounded-xl border bg-card p-6 shadow-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="">
             <div className="mb-6 text-center">
@@ -134,7 +142,7 @@ export default function Signup() {
                   }
                 >
                   <FieldLabel htmlFor="confirmPassword">
-                    Confrim Password
+                    Confirm Password
                   </FieldLabel>
                   <Input
                     name="confirmPassword"
@@ -178,17 +186,21 @@ export default function Signup() {
                   </Button>
                 </div>
 
-                {error ? (
-                  <p className="rounded-md bg-red-50 p-3 text-center text-sm text-red-600">
-                    {error}
-                  </p>
-                ) : null}
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertCircleIcon />
+                    <AlertTitle>Signup failed</AlertTitle>
+                    <AlertDescription>
+                      {error}
+                    </AlertDescription>
+                  </Alert>
+                )}
               </FieldGroup>
             </form>
           </div>
 
           <div className="">
-            <div className="mt-8 rounded-lg bg-slate-100 p-4">
+            <div className="mt-8 rounded-lg bg-muted p-4">
               <p className="mb-3 font-medium">Password must contain:</p>
 
               <div className="space-y-2 text-sm">
