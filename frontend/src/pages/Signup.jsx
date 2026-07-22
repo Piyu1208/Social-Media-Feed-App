@@ -3,6 +3,14 @@ import validator from "validator";
 import api from "../api/axios.js";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext.jsx";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -74,81 +82,147 @@ export default function Signup() {
   };
 
   return (
-    <div>
-      <h2>Create Account</h2>
-      <p>Sign up to continue</p>
-      <form onSubmit={handleSubmit}>
-        <input
-          name="email"
-          type="email"
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
-        />
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-8">
+      <div className="w-full max-w-3xl rounded-xl border bg-white p-6 shadow-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="">
+            <div className="mb-6 text-center">
+              <h2 className="font-bold">Create Account</h2>
+              <p>Sign up to continue</p>
+            </div>
 
-        {touched.email && emailError && <p>{emailError}</p>}
+            <form onSubmit={handleSubmit}>
+              <FieldGroup>
+                <Field data-invalid={!!(touched.email && emailError)}>
+                  <FieldLabel htmlFor="email">Email</FieldLabel>
+                  <Input
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="name@example.com"
+                    value={email}
+                    aria-invalid={!!(touched.email && emailError)}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onBlur={() =>
+                      setTouched((prev) => ({ ...prev, email: true }))
+                    }
+                  />
 
-        <input
-          name="password"
-          type={showPassword ? "text" : "password"}
-          autoComplete="new-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onBlur={() => setTouched((prev) => ({ ...prev, password: true }))}
-        />
+                  {touched.email && emailError && (
+                    <FieldDescription>{emailError}</FieldDescription>
+                  )}
+                </Field>
 
-        <input
-          name="confirmPassword"
-          type={showPassword ? "text" : "password"}
-          autoComplete="new-password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          onBlur={() =>
-            setTouched((prev) => ({ ...prev, confirmPassword: true }))
-          }
-        />
+                <Field>
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                  <Input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    placeholder="Password@1234"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onBlur={() =>
+                      setTouched((prev) => ({ ...prev, password: true }))
+                    }
+                  />
+                </Field>
 
-        {touched.confirmPassword && confirmPasswordError && (
-          <p>{confirmPasswordError}</p>
-        )}
+                <Field
+                  data-invalid={
+                    !!(touched.confirmPassword && confirmPasswordError)
+                  }
+                >
+                  <FieldLabel htmlFor="confirmPassword">
+                    Confrim Password
+                  </FieldLabel>
+                  <Input
+                    name="confirmPassword"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    placeholder="Password@1234"
+                    value={confirmPassword}
+                    aria-invalid={
+                      !!(touched.confirmPassword && confirmPasswordError)
+                    }
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onBlur={() =>
+                      setTouched((prev) => ({ ...prev, confirmPassword: true }))
+                    }
+                  />
 
-        <button type="button" onClick={() => setShowPassword((prev) => !prev)}>
-          {showPassword ? "Hide" : "Show"}
-        </button>
+                  {touched.confirmPassword && confirmPasswordError && (
+                    <FieldDescription>{confirmPasswordError}</FieldDescription>
+                  )}
+                </Field>
 
-        <button disabled={!isFromValid || loading} type="submit">
-          {loading ? "Signing up..." : "Signup"}
-        </button>
+                <div className="flex flex-col gap-3 pt-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </Button>
 
-        <button onClick={(e) => navigate("/login")}>Go to Login page</button>
+                  <Button disabled={!isFromValid || loading} type="submit">
+                    {loading ? "Signing up..." : "Signup"}
+                  </Button>
 
-        {error ? <h3>{error}</h3> : null}
-      </form>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={(e) => navigate("/login")}
+                  >
+                    Go to Login page
+                  </Button>
+                </div>
 
-      <div>
-        <p>Password must contain:</p>
-        <div>
-          <p>
-            {startedTypingPassword ? (checks.length ? "✅" : "❌") : "•"} At
-            least 8 characters
-          </p>
-          <p>
-            {startedTypingPassword ? (checks.uppercase ? "✅" : "❌") : "•"} One
-            uppercase letter
-          </p>
-          <p>
-            {startedTypingPassword ? (checks.lowercase ? "✅" : "❌") : "•"} One
-            lowercase letter
-          </p>
-          <p>
-            {startedTypingPassword ? (checks.number ? "✅" : "❌") : "•"} One
-            number
-          </p>
-          <p>
-            {startedTypingPassword ? (checks.special ? "✅" : "❌") : "•"} One
-            special character
-          </p>
+                {error ? (
+                  <p className="rounded-md bg-red-50 p-3 text-center text-sm text-red-600">
+                    {error}
+                  </p>
+                ) : null}
+              </FieldGroup>
+            </form>
+          </div>
+
+          <div className="">
+            <div className="mt-8 rounded-lg bg-slate-100 p-4">
+              <p className="mb-3 font-medium">Password must contain:</p>
+
+              <div className="space-y-2 text-sm">
+                <p>
+                  {startedTypingPassword ? (checks.length ? "✅" : "❌") : "•"}{" "}
+                  At least 8 characters
+                </p>
+                <p>
+                  {startedTypingPassword
+                    ? checks.uppercase
+                      ? "✅"
+                      : "❌"
+                    : "•"}{" "}
+                  One uppercase letter
+                </p>
+                <p>
+                  {startedTypingPassword
+                    ? checks.lowercase
+                      ? "✅"
+                      : "❌"
+                    : "•"}{" "}
+                  One lowercase letter
+                </p>
+                <p>
+                  {startedTypingPassword ? (checks.number ? "✅" : "❌") : "•"}{" "}
+                  One number
+                </p>
+                <p>
+                  {startedTypingPassword ? (checks.special ? "✅" : "❌") : "•"}{" "}
+                  One special character
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
