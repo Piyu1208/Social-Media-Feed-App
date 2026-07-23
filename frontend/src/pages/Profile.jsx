@@ -46,7 +46,7 @@ export default function Profile() {
 
         <div>
           <h3>Your posts</h3>
-          <div>
+          <div className="mx-auto flex max-w-xl flex-col gap-6 px-4 py-6">
             {posts?.length > 0 &&
               posts.map((post) => (
                 <PostCard

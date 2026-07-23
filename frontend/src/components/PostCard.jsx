@@ -1,4 +1,15 @@
-import "./PostCard.css";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import { Heart, MessageCircle } from "lucide-react";
 
 export default function PostCard({
   profilePicture,
@@ -9,36 +20,66 @@ export default function PostCard({
   comments,
 }) {
   return (
-    <div className="post-card">
-      <div className="post-header">
-        <img className="profile-pic" src={profilePicture?.url} alt={username} />
+    <Card className="w-full max-w-md overflow-hidden">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div className="flex items-center gap-3">
+          <img
+            src={profilePicture?.url}
+            alt={username}
+            className="h-10 w-10 rounded-full object-cover border"
+          />
 
-        <p className="username">{username}</p>
-      </div>
+          <div>
+            <CardTitle className="text-base font-semibold">
+              {username}
+            </CardTitle>
+          </div>
+        </div>
 
-      <div className="post-images">
-        {images.length > 0 &&
-          images.map((image) => (
+        <CardAction>
+          <Button size="sm" variant="outline">
+            Follow
+          </Button>
+        </CardAction>
+      </CardHeader>
+
+      <CardContent className="p-0">
+        <div className="flex snap-x snap-mandatory overflow-x-auto scrollbar-hide">
+          {images.map((image) => (
             <img
-              className="post-image"
-              src={image.url}
               key={image.public_id}
+              src={image.url}
               alt={username}
+              className="h-[500px] w-full flex-shrink-0 snap-center object-cover"
             />
           ))}
-      </div>
-
-      <div className="post-actions">
-        <div className="action-group">
-          <button className="like-btn">🩵 Like</button>
-          <span className="likes">{likes} likes</span>
         </div>
+      </CardContent>
 
-        <div className="action-group">
-          <button className="comment-btn">💬 Comment</button>
-          <span className="comments">{comments} comments</span>
+      <CardFooter className="flex flex-col items-start gap-4 p-4">
+        <div>{caption}</div>
+        <div className="flex w-full items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon">
+              <Heart className="h-5 w-5" />
+            </Button>
+
+            <span className="text-sm text-muted-foreground">
+              {likes} {likes === 1 ? "like" : "likes"}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon">
+              <MessageCircle className="h-5 w-5" />
+            </Button>
+
+            <span className="text-sm text-muted-foreground">
+              {comments} {comments === 1 ? "comment" : "comments"}
+            </span>
+          </div>
         </div>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 }
