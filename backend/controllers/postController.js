@@ -151,18 +151,20 @@ export const deletePost = async (req, res, next) => {
 
 export const likePost = async (req, res, next) => {
   try {
-    const post = await Post.findByIdAndUpdate(
-      req.params.id,
-      {
-        $addToSet: {
-          likes: req.user._id,
-        },
-      },
-      { returnDocument: "after", runValidators: true },
-    );
+    const post = await Post.findById(req.params.id);
 
     if (!post) {
       throw new AppError("Post not found", 404);
+    }
+
+    const hasLiked = post.likes.some(
+      (id) => id.toString() === req.user._id.toString()
+    );
+
+    if (hasLiked) {
+      post.likes.pull(req.user._id);
+    } else {
+      post.likes.addToSet(req.user._id);
     }
 
     //only create notification and emit it if it's not the user's post itself.
@@ -183,29 +185,7 @@ export const likePost = async (req, res, next) => {
       }
     }
 
-    res.status(200).json({
-      success: true,
-      post,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const unlikePost = async (req, res, next) => {
-  try {
-    const post = await Post.findByIdAndUpdate(
-      req.params.id,
-      {
-        $pull: {
-          likes: req.user._id,
-        },
-      },
-      {
-        returnDocument: "after",
-        runValidators: true,
-      },
-    );
+    await post.save();
 
     res.status(200).json({
       success: true,
@@ -215,6 +195,7 @@ export const unlikePost = async (req, res, next) => {
     next(error);
   }
 };
+
 
 export const createComment = async (req, res, next) => {
   let session;
