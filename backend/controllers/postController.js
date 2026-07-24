@@ -65,11 +65,24 @@ export const getPosts = async (req, res, next) => {
 
 export const getPost = async (req, res, next) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const [post, comments] = await Promise.all([
+      Post.findById(req.params.id).populate(
+        "author",
+        "username profilePicture",
+      ),
+      Comment.find({ post: req.params.id })
+        .populate("author", "username profilePicture")
+        .sort({ createdAt: 1 }),
+    ]);
+
+    if (!post) {
+      throw new AppError("Post not found", 404);
+    }
 
     res.status(200).json({
       success: true,
       post,
+      comments,
     });
   } catch (error) {
     next(error);
@@ -158,7 +171,7 @@ export const likePost = async (req, res, next) => {
     }
 
     const hasLiked = post.likes.some(
-      (id) => id.toString() === req.user._id.toString()
+      (id) => id.toString() === req.user._id.toString(),
     );
 
     if (hasLiked) {
@@ -196,7 +209,6 @@ export const likePost = async (req, res, next) => {
   }
 };
 
-
 export const createComment = async (req, res, next) => {
   let session;
   let comment;
@@ -220,14 +232,19 @@ export const createComment = async (req, res, next) => {
         throw new AppError("Post not found.", 404);
       }
 
-      [comment] = await Comment.create([{
+      [comment] = await Comment.create(
+        [
+          {
             post: post._id,
             author: req.user._id,
             text,
-      }], { session });
+          },
+        ],
+        { session },
+      );
 
       post.commentCount += 1;
-      await post.save({session});    
+      await post.save({ session });
     });
 
     if (comment.author.equals(post.author)) {
