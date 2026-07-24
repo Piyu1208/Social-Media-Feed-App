@@ -11,6 +11,7 @@ export default function Post() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
+  const [comment, setComment] = useState("");
 
   const handleScroll = (e) => {
     const { scrollLeft, clientWidth } = e.target;
@@ -26,6 +27,26 @@ export default function Post() {
 
       setPost(res.data?.post);
       setComments(res.data?.comments);
+    } catch (err) {
+      setError(err.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleComment = async () => {
+    if (!comment.trim()) return;
+
+    try {
+      setError(null);
+      setLoading(true);
+
+      const res = await api.post(`/posts/${id}/comments`, {
+        text: comment.trim(),
+      });
+
+      setComments((prev) => [...prev, res.data.comment]);
+      setComment("");
     } catch (err) {
       setError(err.response?.data?.message);
     } finally {
@@ -143,12 +164,17 @@ export default function Post() {
         <div className="border-t bg-background">
           <div className="flex items-center gap-3 border-t p-4">
             <input
+              onChange={(e) => setComment(e.target.value)}
               type="text"
               placeholder="Add a comment..."
               className="flex-1 bg-transparent text-sm outline-none"
             />
 
-            <button className="text-sm font-semibold text-blue-500 hover:text-blue-400">
+            <button
+              className="text-sm font-semibold text-blue-500 hover:text-blue-400"
+              onClick={handleComment}
+              disabled={loading || !comment.trim()}
+            >
               Post
             </button>
           </div>
