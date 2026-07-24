@@ -53,46 +53,37 @@ export default function PostCard({
       setError(err.response?.data?.message);
     }
   };
-
   return (
-    <Card className="w-full max-w-md overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between">
+    <div className="w-full max-w-md overflow-hidden border bg-background shadow-sm">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
           <img
             src={profilePicture?.url}
             alt={username}
-            className="h-10 w-10 rounded-full object-cover border"
+            className="h-10 w-10 rounded-full border object-cover"
           />
 
-          <div>
-            <CardTitle className="text-base font-semibold">
-              {username}
-            </CardTitle>
-          </div>
+          <h3 className="text-base font-semibold">{username}</h3>
         </div>
+      </div>
 
-        <CardAction>
-          <Button size="sm" variant="outline">
-            Follow
-          </Button>
-        </CardAction>
-      </CardHeader>
-
-      <CardContent className="relative p-0">
+      {/* Images */}
+      <div className="relative">
         <div
           ref={scrollRef}
           onScroll={handleScroll}
           className="flex snap-x snap-mandatory overflow-x-auto overflow-y-hidden scroll-smooth
-               [-ms-overflow-style:none]
-               [scrollbar-width:none]
-               [&::-webkit-scrollbar]:hidden"
+          [-ms-overflow-style:none]
+          [scrollbar-width:none]
+          [&::-webkit-scrollbar]:hidden"
         >
           {images.map((image) => (
             <img
               key={image.public_id}
               src={image.url}
               alt={username}
-              className="h-[500px] w-full flex-shrink-0 snap-center object-cover"
+              className="aspect-square w-full flex-shrink-0 snap-center object-cover"
             />
           ))}
         </div>
@@ -102,45 +93,47 @@ export default function PostCard({
             {images.map((_, index) => (
               <div
                 key={index}
-                className={`h-2 w-2 rounded-full transition-all duration-200 ${
+                className={`h-2 w-2 rounded-full transition-all ${
                   currentImage === index ? "bg-white" : "bg-white/40"
                 }`}
               />
             ))}
           </div>
         )}
-      </CardContent>
+      </div>
 
-      <CardFooter className="flex flex-col items-start gap-4 p-4">
-        <div>{caption}</div>
-        <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={handleLike}>
-              <Heart
-                className={`h-5 w-5 transition-colors ${
-                  liked ? "fill-red-500 text-red-500" : "text-muted-foreground"
-                }`}
-              />
-            </Button>
+      {/* Footer */}
+      <div className="space-y-4 p-5">
+        <p className="line-clamp-1 text-md leading-6 text-foreground">
+          {caption}
+        </p>
 
-            <span className="text-sm text-muted-foreground">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={handleLike}
+            className="flex items-center gap-2 transition-opacity hover:opacity-80"
+          >
+            <Heart
+              className={`h-5 w-5 ${
+                liked ? "fill-red-500 text-red-500" : "text-muted-foreground"
+              }`}
+            />
+            <span className="text-sm font-medium">
               {likeCount} {likeCount === 1 ? "like" : "likes"}
             </span>
-          </div>
+          </button>
 
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon"
-            onClick={(e) => navigate(`/post/${id}`)}
-            >
-              <MessageCircle className="h-5 w-5" />
-            </Button>
-
-            <span className="text-sm text-muted-foreground">
+          <button
+            onClick={() => navigate(`/post/${id}`)}
+            className="flex items-center gap-2 transition-opacity hover:opacity-80"
+          >
+            <MessageCircle className="h-5 w-5 text-muted-foreground" />
+            <span className="text-sm font-medium">
               {comments} {comments === 1 ? "comment" : "comments"}
             </span>
-          </div>
+          </button>
         </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }
