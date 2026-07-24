@@ -15,7 +15,13 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
 
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
+
+  if (!user) {
+    return (
+      <div>Loading...</div>
+    );
+  }
 
   useEffect(() => {
     fetchFeed();
@@ -34,6 +40,8 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  
 
 
 
@@ -57,13 +65,17 @@ export default function Home() {
             posts.map((post) => (
               <PostCard
                 key={post._id}
+                id={post._id}
                 profilePicture={post.author.profilePicture}
                 username={post.author.username}
                 caption={post.caption}
                 images={post.images}
                 likes={post.likes.length}
+                isLiked={post.likes.includes(user?._id)}
                 comments={post.commentCount}
+                setError={setError}
               />
+
             ))}
         </div>
       </div>

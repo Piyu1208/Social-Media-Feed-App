@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,15 +12,38 @@ import {
 } from "@/components/ui/card";
 
 import { Heart, MessageCircle } from "lucide-react";
+import api from "../api/axios.js";
 
 export default function PostCard({
+  id,
   profilePicture,
   username,
   images,
   caption,
   likes,
+  isLiked,
   comments,
+  setError,
 }) {
+  const [liked, setLiked] = useState(isLiked);
+  const [likeCount, setLikeCount] = useState(likes);
+
+  const handleLike = async () => {
+    const newLiked = !liked;
+
+    setLiked(newLiked);
+    setLikeCount((count) => count + (newLiked ? 1 : -1));
+
+    try {
+      await api.patch(`/posts/${id}/like`);
+
+    } catch (err) {
+      setLiked(!newLiked);
+      setLikeCount((count) => count + (newLiked ? -1 : 1));
+      setError(err.response?.data?.message);
+    }
+  };
+
   return (
     <Card className="w-full max-w-md overflow-hidden">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -60,12 +85,16 @@ export default function PostCard({
         <div>{caption}</div>
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <Heart className="h-5 w-5" />
+            <Button variant="ghost" size="icon" onClick={handleLike}>
+              <Heart
+                className={`h-5 w-5 transition-colors ${
+                  liked ? "fill-red-500 text-red-500" : "text-muted-foreground"
+                }`}
+              />
             </Button>
 
             <span className="text-sm text-muted-foreground">
-              {likes} {likes === 1 ? "like" : "likes"}
+              {likeCount} {likeCount === 1 ? "like" : "likes"}
             </span>
           </div>
 
