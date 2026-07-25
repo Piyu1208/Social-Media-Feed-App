@@ -15,6 +15,7 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
 
+  const [unreadCount, setUnreadCount] = useState(0);
   //const navigate = useNavigate();
 
   if (!user) {
@@ -23,8 +24,18 @@ export default function Home() {
     );
   }
 
+  const fetchNotificationsCount = async () => {
+    try {
+      const res = await api.get('/notifications/unread-count');
+      setUnreadCount(res.data.count);
+    } catch (err) {
+      setError(err.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     fetchFeed();
+    fetchNotificationsCount();
   }, []);
 
   const fetchFeed = async () => {
@@ -55,7 +66,9 @@ export default function Home() {
         error={error}
         setError={setError}
       />
-      <Navbar onCreatePost={() => setIsCreatePostOpen(true)} />
+      <Navbar onCreatePost={() => setIsCreatePostOpen(true)}
+      unreadCount={unreadCount}
+       />
 
       {error && <p>{error}</p>}
 

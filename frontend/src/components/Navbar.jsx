@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-import { Bell, House, Search, User } from "lucide-react";
-import { PlusSquare } from "lucide-react";
+import { Bell, House, Search, User, PlusSquare } from "lucide-react";
 
-export default function Navbar({ onCreatePost }) {
+export default function Navbar({ onCreatePost, unreadCount }) {
   return (
     <nav className="border-b bg-background">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
@@ -25,8 +24,14 @@ export default function Navbar({ onCreatePost }) {
             <PlusSquare className="h-5 w-5" />
           </button>
 
-          <Link to="/notifications">
+          <Link to="/notifications" className="relative">
             <Bell className="h-5 w-5" />
+
+            {unreadCount > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                {unreadCount}
+              </span>
+            )}
           </Link>
 
           <Link to="/profile">
