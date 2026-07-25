@@ -164,6 +164,8 @@ export const completeProfile = async (req, res, next) => {
         _id: user._id,
         email: user.email,
         role: user.role,
+        profilePicture: user.profilePicture,
+        username: user.username,
       },
     });
   } catch (error) {
@@ -203,6 +205,8 @@ export const login = async (req, res, next) => {
         _id: user._id,
         email: user.email,
         role: user.role,
+        profilePicture: user.profilePicture,
+        uername: user.username,
       },
     });
 
