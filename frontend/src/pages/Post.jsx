@@ -2,8 +2,10 @@ import { useRef, useState, useEffect } from "react";
 import { Heart, MessageCircle, Send } from "lucide-react";
 import api from "../api/axios.js";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../AuthContext.jsx";
 
 export default function Post() {
+  const { user } = useAuth();
   const [currentImage, setCurrentImage] = useState(0);
   const scrollRef = useRef(null);
   const [error, setError] = useState(null);
@@ -45,7 +47,15 @@ export default function Post() {
         text: comment.trim(),
       });
 
-      setComments((prev) => [...prev, res.data.comment]);
+      const newComment = {
+        ...res.data.comment,
+        author: {
+          username: user.username,
+          profilePicture: user.profilePicture,
+        },
+      };
+
+      setComments((prev) => [...prev, newComment]);
       setComment("");
     } catch (err) {
       setError(err.response?.data?.message);
@@ -75,7 +85,7 @@ export default function Post() {
   }
 
   return (
-    <div className="mx-auto mt-6 flex h-[90vh] w-[900px] max-w-[95vw] overflow-hidden rounded-xl border bg-background shadow-xl">
+    <div className="mx-auto mt-6 flex h-[90vh] w-[900px] max-w-[95vw] overflow-hidden border bg-background shadow-xl">
       {/* LEFT */}
       {/* LEFT - Hidden on mobile */}
       <div className="relative hidden h-full w-1/2 items-center justify-center bg-black md:flex">
