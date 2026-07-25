@@ -171,12 +171,15 @@ export const follow = async (req, res, next) => {
         type: "follow",
     });
 
+    const populatedNotification = await Notification.findById(notification._id)
+    .populate("sender", "username profilePicture");
+
     const socketId = getSocketId(userToFollow._id.toString());
 
     const io = getIO();
 
     if (socketId) {
-      io.to(socketId).emit("notification", notification);
+      io.to(socketId).emit("notification", populatedNotification);
     }
 
     res.status(200).json({

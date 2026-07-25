@@ -189,12 +189,15 @@ export const likePost = async (req, res, next) => {
         post: post._id,
       });
 
+      const populatedNotification = await Notification.findById(notification._id)
+      .populate("sender", "username profilePicture");
+
       const socketId = getSocketId(post.author.toString());
 
       const io = getIO();
 
       if (socketId) {
-        io.to(socketId).emit("notification", notification);
+        io.to(socketId).emit("notification", populatedNotification);
       }
     }
 
@@ -247,7 +250,7 @@ export const createComment = async (req, res, next) => {
       await post.save({ session });
     });
 
-    if (comment.author.equals(post.author)) {
+    if (!comment.author.equals(post.author)) {
       const notification = await Notification.create({
         recipient: post.author,
         sender: comment.author,
@@ -255,12 +258,15 @@ export const createComment = async (req, res, next) => {
         post: post._id,
       });
 
+      const populatedNotification = await Notification.findById(notification._id)
+      .populate("sender", "username profilePicture");
+
       const socketId = getSocketId(post.author.toString());
-      console.log(socketId);
       const io = getIO();
 
       if (socketId) {
-        io.to(socketId).emit("notification", notification);
+        console.log("emmiting notification to:", socketId);
+        io.to(socketId).emit("notification", populatedNotification);
       }
     }
 
