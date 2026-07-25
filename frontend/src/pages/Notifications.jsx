@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import NotificationItem from "../components/NotificationItem.jsx";
 import api from "../api/axios.js";
 import { useNavigate } from "react-router-dom";
+import { useNotifications } from "../NotificationContext.jsx";
 
 export default function Notifications() {
-  const [notifications, setNotifications] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { notifications, setNotifications, markAsRead } = useNotifications();
 
   const fetchNotifications = async () => {
     setError(null);
@@ -28,7 +29,7 @@ export default function Notifications() {
     setLoading(true);
     try {
         if (!notification.isRead) {
-            await api.patch(`/notifications/${notification._id}/read`);
+            await markAsRead(notification._id);
         }
         navigate(`/post/${notification.post}`);
     } catch (err) {

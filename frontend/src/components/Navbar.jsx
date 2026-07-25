@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { Bell, House, Search, User, PlusSquare } from "lucide-react";
+import { useNotifications } from "../NotificationContext.jsx";
 
-export default function Navbar({ onCreatePost, unreadCount }) {
+export default function Navbar({ onCreatePost }) {
+  const { unreadCount } = useNotifications();
+
   return (
     <nav className="border-b bg-background">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
