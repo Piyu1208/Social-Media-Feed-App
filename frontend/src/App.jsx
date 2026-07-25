@@ -8,14 +8,16 @@ import Login from "./pages/Login.jsx";
 import Home from "./pages/Home.jsx";
 import Profile from "./pages/Profile.jsx";
 import Post from "./pages/Post.jsx";
+import { useAuth } from "./AuthContext.jsx";
 
 function App() {
+  const { user } = useAuth();
 
   return (
     <>
     <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={user ? <Home /> : <Signup />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/complete-profile" element={<CompleteProfile />} />
