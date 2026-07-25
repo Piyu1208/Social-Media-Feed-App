@@ -9,6 +9,7 @@ import Home from "./pages/Home.jsx";
 import Profile from "./pages/Profile.jsx";
 import Post from "./pages/Post.jsx";
 import { useAuth } from "./AuthContext.jsx";
+import Notifications from "./pages/Notifications.jsx";
 
 function App() {
   const { user } = useAuth();
@@ -24,6 +25,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/post/:id" element={<Post />} />
+      <Route path="/notifications" element={<Notifications />} />
     </Routes>
     </BrowserRouter>
     </>
