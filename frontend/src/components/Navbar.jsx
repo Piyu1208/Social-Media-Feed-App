@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Bell, House, Search, User, PlusSquare } from "lucide-react";
 import { useNotifications } from "../NotificationContext.jsx";
 
-export default function Navbar({ onCreatePost }) {
+export default function Navbar() {
   const { unreadCount } = useNotifications();
 
   return (
@@ -19,13 +19,9 @@ export default function Navbar({ onCreatePost }) {
             <Search className="h-5 w-5" />
           </Link>
 
-          <button
-            onClick={onCreatePost}
-            className="rounded-full p-2 transition hover:bg-muted"
-            aria-label="Create post"
-          >
+          <Link to="/create-post">
             <PlusSquare className="h-5 w-5" />
-          </button>
+          </Link>
 
           <Link to="/notifications" className="relative">
             <Bell className="h-5 w-5" />

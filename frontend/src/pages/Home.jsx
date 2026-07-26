@@ -1,11 +1,10 @@
 import { useAuth } from "../AuthContext.jsx";
 import Navbar from "../components/Navbar.jsx";
-import CreatePost from "../components/CreatePost.jsx";
 import api from "../api/axios.js";
 import { useState, useEffect } from "react";
 import PostCard from "../components/PostCard.jsx";
 import { useNavigate } from "react-router-dom";
-import CreatePostModal from "../components/CreatePostModal.jsx";
+
 
 export default function Home() {
   const { user, setAuth } = useAuth();
@@ -50,13 +49,7 @@ export default function Home() {
 
   return (
     <>
-      <CreatePostModal
-        isCreatePostOpen={isCreatePostOpen}
-        setIsCreatePostOpen={setIsCreatePostOpen}
-        error={error}
-        setError={setError}
-      />
-      <Navbar onCreatePost={() => setIsCreatePostOpen(true)}       />
+      <Navbar />
 
       {error && <p>{error}</p>}
 

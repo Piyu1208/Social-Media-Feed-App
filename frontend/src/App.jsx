@@ -10,9 +10,12 @@ import Profile from "./pages/Profile.jsx";
 import Post from "./pages/Post.jsx";
 import { useAuth } from "./AuthContext.jsx";
 import Notifications from "./pages/Notifications.jsx";
+import CreatePost from "./pages/CreatePost.jsx";
 
 function App() {
+
   const { user } = useAuth();
+
 
   return (
     <>
@@ -26,6 +29,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/post/:id" element={<Post />} />
       <Route path="/notifications" element={<Notifications />} />
+      <Route path="/create-post" element={<CreatePost />} />
     </Routes>
     </BrowserRouter>
     </>
