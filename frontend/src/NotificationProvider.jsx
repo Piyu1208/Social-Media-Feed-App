@@ -5,14 +5,16 @@ import api from "./api/axios.js";
 import { useAuth } from "./AuthContext";
 
 export default function NotificationProvider({ children }) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    if (!user) return;
+    console.log("Notification provider user:", user);
+    if (loading || !user) return;
 
+    console.log("fetching count...");
     fetchNotificationsCount();
 
     socket.connect();
@@ -38,7 +40,7 @@ export default function NotificationProvider({ children }) {
       socket.off("notification", handleNotification);
       socket.disconnect();
     };
-  }, [user]);
+  }, [user, loading]);
 
   const fetchNotificationsCount = async () => {
     const res = await api.get("/notifications/unread-count");
