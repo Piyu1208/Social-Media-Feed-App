@@ -8,6 +8,18 @@ import { upload, uploadToCloudinary, deleteFromCloudinary } from "../utils/image
 import { getIO, getSocketId } from "../socket/socket.js";
 
 
+export const me = async (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: {
+      _id: req.user._id,
+      username: req.user.username,
+      email: req.user.email,
+      bio: req.user.bio,
+      profilePicture: req.user.profilePicture,
+    },
+  });
+};
 
 export const getMe = async (req, res, next) => {
   try {

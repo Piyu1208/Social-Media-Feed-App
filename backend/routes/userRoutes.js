@@ -1,10 +1,12 @@
 import express from "express";
-import { getMe, visitProfile, updateProfile, follow, unfollow } from "../controllers/userController.js";
+import { me, getMe, visitProfile, updateProfile, follow, unfollow } from "../controllers/userController.js";
 
 import { upload } from "../utils/imageUploadUtils.js";
 
 
 const router = express.Router();
+
+router.get("/users/auth/me", me);
 
 router.get("/users/me", getMe);
 
