@@ -140,18 +140,29 @@ export const updatePost = async (req, res, next) => {
 };
 
 export const deletePost = async (req, res, next) => {
+  const session = await mongoose.startSession();
   try {
-    const post = await Post.findById(req.params.id);
+    let post;
 
-    if (!post) {
-      throw new AppError("Post not found", 404);
-    }
+    await session.withTransaction(async () => {
+      post = await Post.findById(req.params.id).session(session);
+
+      if (!post) {
+        throw new AppError("Post not found", 404);
+      }
+
+      if (post.author.toString() !== req.user._id.toString()) {
+        throw new AppError("Unauthorized", 403);
+      }
+
+      await Comment.deleteMany({ post: post._id }, { session });
+
+      await post.deleteOne({ session });
+    });
 
     for (const image of post.images) {
       await deleteFromCloudinary(image.public_id);
     }
-
-    await post.deleteOne();
 
     res.status(200).json({
       success: true,
@@ -159,6 +170,10 @@ export const deletePost = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  } finally {
+    if (session) {
+      session.endSession();
+    }
   }
 };
 
@@ -189,8 +204,9 @@ export const likePost = async (req, res, next) => {
         post: post._id,
       });
 
-      const populatedNotification = await Notification.findById(notification._id)
-      .populate("sender", "username profilePicture");
+      const populatedNotification = await Notification.findById(
+        notification._id,
+      ).populate("sender", "username profilePicture");
 
       const socketId = getSocketId(post.author.toString());
 
@@ -258,8 +274,9 @@ export const createComment = async (req, res, next) => {
         post: post._id,
       });
 
-      const populatedNotification = await Notification.findById(notification._id)
-      .populate("sender", "username profilePicture");
+      const populatedNotification = await Notification.findById(
+        notification._id,
+      ).populate("sender", "username profilePicture");
 
       const socketId = getSocketId(post.author.toString());
       const io = getIO();
