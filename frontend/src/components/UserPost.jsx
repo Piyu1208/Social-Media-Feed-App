@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import api from "../api/axios.js";
 import { Button } from "@/components/ui/button";
 
@@ -24,6 +24,31 @@ export default function UserPost({
   const handleScroll = (e) => {
     const { scrollLeft, clientWidth } = e.target;
     setCurrentImage(Math.round(scrollLeft / clientWidth));
+  };
+
+  const scrollToImage = (index) => {
+    if (!scrollRef.current) return;
+
+    const width = scrollRef.current.clientWidth;
+
+    scrollRef.current.scrollTo({
+      left: index * width,
+      behavior: "smooth",
+    });
+
+    setCurrentImage(index);
+  };
+
+  const handlePrev = () => {
+    if (currentImage > 0) {
+      scrollToImage(currentImage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentImage < images.length - 1) {
+      scrollToImage(currentImage + 1);
+    }
   };
 
   const handleLike = async () => {
@@ -60,6 +85,24 @@ export default function UserPost({
             />
           ))}
         </div>
+
+        {images.length > 1 && currentImage > 0 && (
+          <button
+            onClick={handlePrev}
+            className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white backdrop-blur-sm transition hover:bg-black/70"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+        )}
+
+        {images.length > 1 && currentImage < images.length - 1 && (
+          <button
+            onClick={handleNext}
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white backdrop-blur-sm transition hover:bg-black/70"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        )}
 
         {images.length > 1 && (
           <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
