@@ -49,7 +49,7 @@ export default function Home() {
 
   return (
     <>
-      <Navbar />
+      {/*<Navbar />*/}
 
       {error && <p>{error}</p>}
 

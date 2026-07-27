@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './App.css'
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Signup from "./pages/Signup.jsx";
@@ -11,6 +10,7 @@ import Post from "./pages/Post.jsx";
 import { useAuth } from "./AuthContext.jsx";
 import Notifications from "./pages/Notifications.jsx";
 import CreatePost from "./pages/CreatePost.jsx";
+import Navbar from "./components/Navbar.jsx";
 
 function App() {
 
@@ -19,7 +19,9 @@ function App() {
 
   return (
     <>
+    
     <BrowserRouter>
+    <Navbar />
     <Routes>
       <Route path="/" element={user ? <Home /> : <Signup />} />
       <Route path="/signup" element={<Signup />} />
