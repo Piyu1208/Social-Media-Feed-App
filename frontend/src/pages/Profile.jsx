@@ -31,6 +31,20 @@ export default function Profile() {
     }
   };
 
+    const handleDeletePost = async (postId) => {
+      setError(null);
+      setLoading(true);
+    try {
+      await api.delete(`/posts/${postId}`);
+
+      setPosts((prev) => prev.filter((post) => post._id !== postId))
+    } catch (err) {
+      setError(err.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -56,51 +70,61 @@ export default function Profile() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-6">
       {/* Profile Header */}
-      <div className="rounded-2xl border bg-background p-8 shadow-sm">
+      <div className="border bg-gradient-to-br from-background to-muted/30 p-8 shadow-sm">
         <div className="flex flex-col gap-8 md:flex-row md:items-start">
           {/* Avatar */}
           <img
             src={profile?.profilePicture?.url}
             alt={profile?.username}
-            className="h-32 w-32 shrink-0 rounded-full object-cover border"
+            className="h-32 w-32 shrink-0 rounded-full border-4 border-background object-cover shadow-lg"
           />
 
           {/* Info */}
           <div className="flex-1">
-            <h1 className="text-3xl font-bold">{profile?.username}</h1>
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">
+                  {profile?.username}
+                </h1>
 
-            {profile?.bio && (
-              <p className="mt-3 max-w-2xl text-muted-foreground leading-relaxed">
-                {profile.bio}
-              </p>
-            )}
+                {profile?.bio && (
+                  <p className="mt-2 max-w-2xl leading-relaxed text-muted-foreground">
+                    {profile.bio}
+                  </p>
+                )}
+              </div>
+
+              {/* Edit/Follow button */}
+              {/* <Button>Edit Profile</Button> */}
+            </div>
 
             {/* Stats */}
-            <div className="mt-8 flex gap-12">
-              <div>
-                <p className="text-2xl font-bold">{posts.length}</p>
-                <p className="text-sm text-muted-foreground">Posts</p>
+            <div className="mt-8 flex flex-wrap gap-8 text-sm">
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl font-bold">{posts.length}</span>
+                <span className="text-muted-foreground">Posts</span>
               </div>
 
-              <div>
-                <p className="text-2xl font-bold">
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl font-bold">
                   {profile?.followers.length}
-                </p>
-                <p className="text-sm text-muted-foreground">Followers</p>
+                </span>
+                <span className="text-muted-foreground">
+                  {profile?.followers.length === 1 ? "Follower" : "Followers"}
+                </span>
               </div>
 
-              <div>
-                <p className="text-2xl font-bold">
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl font-bold">
                   {profile?.following.length}
-                </p>
-                <p className="text-sm text-muted-foreground">Following</p>
+                </span>
+                <span className="text-muted-foreground">Following</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Posts */}
       {/* Posts */}
       <div className="mt-8">
         <h2 className="mb-6 text-xl font-semibold">Your Posts</h2>
@@ -111,12 +135,13 @@ export default function Profile() {
               <UserPost
                 key={post._id}
                 id={post._id}
-                username={post.author.username}
+                username={profile.username}
                 caption={post.caption}
                 images={post.images}
                 likes={post.likes.length}
                 isLiked={post.likes.includes(user?._id)}
                 comments={post.commentCount}
+                onDelete={handleDeletePost}
               />
             ))}
           </div>

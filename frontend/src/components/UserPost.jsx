@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heart, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { MoreVertical, Trash2 } from "lucide-react";
 import api from "../api/axios.js";
-import { Button } from "@/components/ui/button";
 
 export default function UserPost({
   id,
@@ -13,11 +13,13 @@ export default function UserPost({
   isLiked,
   comments,
   setError,
+  onDelete,
 }) {
   const [liked, setLiked] = useState(isLiked);
   const [likeCount, setLikeCount] = useState(likes);
   const [currentImage, setCurrentImage] = useState(0);
   const scrollRef = useRef(null);
+  const [showMenu, setShowMenu] = useState(false);
 
   const navigate = useNavigate();
 
@@ -65,8 +67,36 @@ export default function UserPost({
     }
   };
 
+
+
   return (
     <div className="mx-auto w-full max-w-xl overflow-hidden border bg-background shadow-sm">
+      {/* Header */}
+      <div className="relative">
+        <div className="flex items-center justify-between p-3">
+          <span className="font-medium">{username}</span>
+
+          <button
+            onClick={() => setShowMenu(!showMenu)}
+            className="rounded-full p-2 hover:bg-muted/60"
+          >
+            <MoreVertical className="h-5 w-5" />
+          </button>
+        </div>
+
+        {showMenu && (
+          <div className="absolute right-2 top-8 z-20 w-40 rounded-md border bg-white shadow-lg">
+            <button
+              onClick={() => onDelete(id)}
+              className="flex w-full items-center rounded-md gap-2 px-4 py-2 text-red-600 hover:bg-gray-100"
+            >
+              <Trash2 className="h-4 w-4" />
+              Delete Post
+            </button>
+          </div>
+        )}
+      </div>
+      {/* Images */}
       <div className="relative">
         <div
           ref={scrollRef}
