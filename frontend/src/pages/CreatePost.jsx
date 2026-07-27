@@ -100,7 +100,6 @@ export default function CreatePost() {
     <>
       {step === "upload" && <ImageUploadStep onSelect={handleImageChange} />}
 
-      <div className="mx-auto w-full max-w-2xl">
         {step === "editor" && (
           <ImageEditorStep
             images={images}
@@ -111,9 +110,9 @@ export default function CreatePost() {
             onBack={() => setStep("upload")}
           />
         )}
-      </div>
 
       {step === "caption" && (
+         <div className="mx-auto w-full max-w-2xl">
         <CaptionStep
           caption={caption}
           setCaption={setCaption}
@@ -122,6 +121,7 @@ export default function CreatePost() {
           onBack={() => setStep("editor")}
           onSubmit={handleCreatePost}
         />
+        </div>
       )}
     </>
   );
