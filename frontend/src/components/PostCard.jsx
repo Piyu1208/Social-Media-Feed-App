@@ -151,7 +151,7 @@ export default function PostCard({
           {caption}
         </p>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between py-2">
           <button
             onClick={handleLike}
             className="flex items-center gap-2 transition-opacity hover:opacity-80"

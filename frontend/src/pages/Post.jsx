@@ -12,6 +12,8 @@ export default function Post() {
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const [post, setPost] = useState(null);
+  const [liked, setLiked] = useState();
+  const [likeCount, setLikeCount] = useState();
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
 
@@ -27,8 +29,12 @@ export default function Post() {
 
       const res = await api.get(`/posts/${id}`);
 
-      setPost(res.data?.post);
+      const fetchedPost = res.data?.post;
+
+      setPost(fetchedPost);
       setComments(res.data?.comments);
+      setLiked(fetchedPost.likes.includes(user?._id));
+      setLikeCount(fetchedPost.likes.length);
     } catch (err) {
       setError(err.response?.data?.message);
     } finally {
@@ -61,6 +67,21 @@ export default function Post() {
       setError(err.response?.data?.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLike = async () => {
+    const newLiked = !liked;
+
+    setLiked(newLiked);
+    setLikeCount((count) => count + (newLiked ? 1 : -1));
+
+    try {
+      await api.patch(`/posts/${id}/like`);
+    } catch (err) {
+      setLiked(!newLiked);
+      setLikeCount((count) => count + (newLiked ? -1 : 1));
+      setError(err.response?.data?.message);
     }
   };
 
@@ -122,7 +143,6 @@ export default function Post() {
       </div>
 
       {/* RIGHT */}
-      {/* RIGHT */}
       <div className="flex h-full w-full flex-col md:w-1/2 border-l">
         {/* Header */}
         <div className="flex items-center gap-3 border-b p-4">
@@ -172,8 +192,33 @@ export default function Post() {
 
         {/* Footer */}
         <div className="border-t bg-background">
+          <div className="flex items-center justify-between py-4 px-3">
+            <button
+              onClick={handleLike}
+              className="flex items-center gap-2 transition-opacity hover:opacity-80"
+            >
+              <Heart
+                className={`h-5 w-5 ${
+                  liked ? "fill-red-500 text-red-500" : "text-muted-foreground"
+                }`}
+              />
+              <span className="text-sm font-medium">
+                {likeCount} {likeCount === 1 ? "like" : "likes"}
+              </span>
+            </button>
+
+            <button
+              className="flex items-center gap-2 transition-opacity hover:opacity-80"
+            >
+              <MessageCircle className="h-5 w-5 text-muted-foreground" />
+              <span className="text-sm font-medium">
+                {comments.length} {comments.length === 1 ? "comment" : "comments"}
+              </span>
+            </button>
+          </div>
           <div className="flex items-center gap-3 border-t p-4">
             <input
+              value={comment}
               onChange={(e) => setComment(e.target.value)}
               type="text"
               placeholder="Add a comment..."
