@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 import api from "../api/axios.js";
+import { useAuth } from "../AuthContext.jsx";
 
 export default function SearchUser() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [posts, setPosts] = useState(null);
+  const [followers, setFollowers] = useState(null);
+  const { user } = useAuth();
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -22,11 +26,32 @@ export default function SearchUser() {
       setLoading(true);
       const res = await api.get(`/users/${text.trim()}`);
       setProfile(res.data.profile);
+      setFollowers(res.data.followers);
     } catch (err) {
       setProfile(null);
       setError(err.response?.data?.message || "User not found.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleFollow = async () => {
+    setError(null);
+    try {
+        setLoading(true);
+        
+        if (followers.includes(user._id)) {
+            const res = await api.delete(`/users/${profile.id}/follow`);
+            setFollowers(res.data.otherUser.followers);
+            setFollowing(res.data.following);
+        } else {
+            const res = await api.patch(`/users/${profile.id}/follow`);
+            setFollowers(res.data.otherUser.followers);
+        }
+    } catch (err) {
+        setError(err.response?.data?.message);
+    } finally {
+        setLoading(false);
     }
   };
 
@@ -109,13 +134,23 @@ export default function SearchUser() {
                   {profile.bio || "No bio available."}
                 </p>
               </div>
+
+              <div>
+                {profile.username !== user.username && (
+                  <button className="w-full sm:w-auto rounded-md bg-black px-6 py-3 text-sm font-medium text-white transition hover:bg-gray-800 disabled:opacity-50"
+                  onClick={handleFollow}
+                  >
+                    {followers.includes(user._id) ? "Following" : "Follow"}
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Stats */}
             <div className="mt-5 grid grid-cols-3 gap-2 border-t border-gray-100 pt-6 sm:gap-6">
               <div className="text-center">
                 <p className="text-xl sm:text-2xl font-semibold">
-                  {profile.followersCount ?? 0}
+                  {followers.length ?? 0}
                 </p>
 
                 <p className="mt-1 text-xs sm:text-sm text-gray-500">
@@ -138,9 +173,7 @@ export default function SearchUser() {
                   {profile.postsCount ?? 0}
                 </p>
 
-                <p className="mt-1 text-xs sm:text-sm text-gray-500">
-                  Posts
-                </p>
+                <p className="mt-1 text-xs sm:text-sm text-gray-500">Posts</p>
               </div>
             </div>
           </div>
