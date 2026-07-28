@@ -63,6 +63,7 @@ export const visitProfile = async (req, res, next) => {
     res.status(200).json({
       success: true,
       profile: {
+        id: user._id,
         username: user.username,
         bio: user.bio,
         profilePicture: user.profilePicture,
@@ -217,7 +218,7 @@ export const unfollow = async (req, res, next) => {
     session = await mongoose.startSession();
     session.startTransaction();
 
-    const userToFollow = await User.findByIdAndUpdate(
+    const otherUser = await User.findByIdAndUpdate(
       req.params.id,
       {
         $pull: {
@@ -242,7 +243,7 @@ export const unfollow = async (req, res, next) => {
     res.status(200).json({
       success: true,
       user,
-      userToFollow,
+      otherUser,
     });
   } catch (error) {
     if (session) {
