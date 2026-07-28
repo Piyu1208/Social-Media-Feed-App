@@ -12,6 +12,7 @@ import Notifications from "./pages/Notifications.jsx";
 import CreatePost from "./pages/CreatePost.jsx";
 import Navbar from "./components/Navbar.jsx";
 import SearchUser from "./pages/SearchUser.jsx";
+import VisitProfile from "./pages/VisitProfile.jsx";
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
       <Route path="/notifications" element={<Notifications />} />
       <Route path="/create-post" element={<CreatePost />} />
       <Route path="/search" element={<SearchUser />}/>
+      <Route path="/visit-profile/:username" element={<VisitProfile />}  />
     </Routes>
     </BrowserRouter>
     </>

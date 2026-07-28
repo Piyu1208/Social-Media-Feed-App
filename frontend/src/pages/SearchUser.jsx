@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import api from "../api/axios.js";
 import { useAuth } from "../AuthContext.jsx";
+import { Link } from "react-router-dom";
 
 export default function SearchUser() {
   const [text, setText] = useState("");
@@ -38,20 +39,16 @@ export default function SearchUser() {
   const handleFollow = async () => {
     setError(null);
     try {
-        setLoading(true);
-        
-        if (followers.includes(user._id)) {
-            const res = await api.delete(`/users/${profile.id}/follow`);
-            setFollowers(res.data.otherUser.followers);
-            setFollowing(res.data.following);
-        } else {
-            const res = await api.patch(`/users/${profile.id}/follow`);
-            setFollowers(res.data.otherUser.followers);
-        }
+      if (followers.includes(user._id)) {
+        const res = await api.delete(`/users/${profile.id}/follow`);
+        setFollowers(res.data.otherUser.followers);
+        setFollowing(res.data.following);
+      } else {
+        const res = await api.patch(`/users/${profile.id}/follow`);
+        setFollowers(res.data.otherUser.followers);
+      }
     } catch (err) {
-        setError(err.response?.data?.message);
-    } finally {
-        setLoading(false);
+      setError(err.response?.data?.message);
     }
   };
 
@@ -127,7 +124,9 @@ export default function SearchUser() {
 
               <div className="min-w-0 flex-1">
                 <h2 className="truncate text-2xl font-semibold">
-                  {profile.username}
+                  <Link to={`/visit-profile/${profile.username}`}>
+                    {profile.username}
+                  </Link>
                 </h2>
 
                 <p className="mt-2 break-words text-gray-600">
@@ -137,8 +136,9 @@ export default function SearchUser() {
 
               <div>
                 {profile.username !== user.username && (
-                  <button className="w-full sm:w-auto rounded-md bg-black px-6 py-3 text-sm font-medium text-white transition hover:bg-gray-800 disabled:opacity-50"
-                  onClick={handleFollow}
+                  <button
+                    className="w-full sm:w-auto rounded-md bg-black px-6 py-3 text-sm font-medium text-white transition hover:bg-gray-800 disabled:opacity-50"
+                    onClick={handleFollow}
                   >
                     {followers.includes(user._id) ? "Following" : "Follow"}
                   </button>
