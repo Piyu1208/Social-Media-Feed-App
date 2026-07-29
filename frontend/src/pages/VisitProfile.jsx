@@ -122,7 +122,7 @@ export default function VisitProfile() {
 
           <div className="text-center">
             <p className="text-xl sm:text-2xl font-semibold">
-              {<posts className="length"></posts> ?? 0}
+              {posts.length ?? 0}
             </p>
 
             <p className="mt-1 text-xs sm:text-sm text-gray-500">Posts</p>

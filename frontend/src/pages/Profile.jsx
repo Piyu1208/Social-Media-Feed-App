@@ -31,19 +31,19 @@ export default function Profile() {
     }
   };
 
-    const handleDeletePost = async (postId) => {
-      setError(null);
-      setLoading(true);
+  const handleDeletePost = async (postId) => {
+    setError(null);
+    setLoading(true);
     try {
       await api.delete(`/posts/${postId}`);
 
-      setPosts((prev) => prev.filter((post) => post._id !== postId))
+      setPosts((prev) => prev.filter((post) => post._id !== postId));
     } catch (err) {
       setError(err.response?.data?.message);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchProfile();
@@ -72,34 +72,33 @@ export default function Profile() {
       {/* Profile Header */}
       <div className="border bg-gradient-to-br from-background to-muted/30 p-8 shadow-sm">
         <div className="flex flex-col gap-8 md:flex-row md:items-start">
-          {/* Avatar */}
-          <img
-            src={profile?.profilePicture?.url}
-            alt={profile?.username}
-            className="h-32 w-32 shrink-0 rounded-full border-4 border-background object-cover shadow-lg"
-          />
+          <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-center sm:text-left">
+            {/* Avatar */}
+            <img
+              src={profile?.profilePicture?.url}
+              alt={profile?.username}
+              className="h-32 w-32 shrink-0 rounded-full border-4 border-background object-cover shadow-lg"
+            />
 
-          {/* Info */}
-          <div className="flex-1">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div>
-                <h1 className="text-3xl font-bold tracking-tight">
-                  {profile?.username}
-                </h1>
+            {/* Info */}
+            <div className="flex-1">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight">
+                    {profile?.username}
+                  </h1>
 
-                {profile?.bio && (
-                  <p className="mt-2 max-w-2xl leading-relaxed text-muted-foreground">
-                    {profile.bio}
-                  </p>
-                )}
+                  {profile?.bio && (
+                    <p className="mt-2 max-w-2xl leading-relaxed text-muted-foreground">
+                      {profile.bio}
+                    </p>
+                  )}
+                </div>
               </div>
-
-              {/* Edit/Follow button */}
-              {/* <Button>Edit Profile</Button> */}
             </div>
 
             {/* Stats */}
-            <div className="mt-8 flex flex-wrap gap-8 text-sm">
+            <div className="mt-8 lg:pl-20 flex flex-wrap gap-8 text-sm">
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-bold">{posts.length}</span>
                 <span className="text-muted-foreground">Posts</span>
