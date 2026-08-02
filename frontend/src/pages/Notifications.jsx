@@ -31,7 +31,13 @@ export default function Notifications() {
         if (!notification.isRead) {
             await markAsRead(notification._id);
         }
-        navigate(`/post/${notification.post}`);
+
+        if (notification.type === "follow") {
+          navigate(`/visit-profile/${notification.sender.username}`);
+        } else {
+          navigate(`/post/${notification.post}`);
+        }
+        
     } catch (err) {
         setError(err.response?.data?.message);
     } finally {
