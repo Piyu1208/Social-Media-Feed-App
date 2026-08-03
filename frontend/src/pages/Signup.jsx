@@ -221,7 +221,10 @@ export default function Signup() {
                   <button
                     type="submit"
                     disabled={!isFormValid || loading}
-                    className="inline-flex h-10 w-full items-center justify-center rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="inline-flex h-10 w-full items-center justify-center rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:opacity-90 
+                    border
+                    hover:bg-accent
+                    disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {loading ? "Signing up..." : "Signup"}
                   </button>
