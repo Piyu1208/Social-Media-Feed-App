@@ -2,20 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext.jsx";
 import api from "../api/axios.js";
-
-import { REGEXP_ONLY_DIGITS } from "input-otp";
-
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
-
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircleIcon } from "lucide-react";
 
 export default function VerifyEmail() {
   const [otp, setOTP] = useState("");
-  const { user, setAuth } = useAuth();
+  const { user } = useAuth();
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -51,7 +42,11 @@ export default function VerifyEmail() {
     }
   };
 
-
+  useEffect(() => {
+    if (otp.length === 6 && !loading) {
+      handleSubmit();
+    }
+  }, [otp, loading]);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -67,32 +62,46 @@ export default function VerifyEmail() {
           </div>
         ) : (
           <form className="w-full flex justify-center">
-            <InputOTP
-              id="otp"
-              maxLength={6}
-              pattern={REGEXP_ONLY_DIGITS}
-              value={otp}
-              disabled={loading}
-              onComplete={() => handleSubmit()}
-              onChange={(value) => setOTP(value)}
-            >
-              <InputOTPGroup>
-                <InputOTPSlot index={0} />
-                <InputOTPSlot index={1} />
-                <InputOTPSlot index={2} />
-                <InputOTPSlot index={3} />
-                <InputOTPSlot index={4} />
-                <InputOTPSlot index={5} />
-              </InputOTPGroup>
-            </InputOTP>
+            <div className="flex gap-2">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  disabled={loading}
+                  value={otp[index] || ""}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "");
+                    const newOTP = otp.split("");
+                    newOTP[index] = value;
+                    const updatedOTP = newOTP.join("");
+                    setOTP(updatedOTP);
+
+                    //move to next box
+                    if (value && e.target.nextElementSibling) {
+                      e.target.nextElementSibling.focus();
+                    }
+
+                    if (updatedOTP.length === 6 && !updatedOTP.includes("")) {
+                      handleSubmit();
+                    }
+                  }}
+                  className="h-10 w-10 rounded-md border border-input bg-background text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                />
+              ))}
+            </div>
           </form>
         )}
 
         {error && (
-          <Alert variant="destructive" className="w-full">
-            <AlertTitle>Verification failed</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
+          <div className="flex w-full gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+            <AlertCircleIcon className="h-5 w-5 shrink-0" />
+            <div>
+              <h4 className="font-medium">Verification failed</h4>
+              <p className="mt-1 text-sm">{error}</p>
+            </div>
+          </div>
         )}
       </div>
     </div>
