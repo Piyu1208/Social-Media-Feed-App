@@ -13,8 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import { Loader2 } from "lucide-react";
@@ -27,7 +25,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(false);
-  const { user, setAuth } = useAuth();
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -57,53 +55,75 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Login</CardTitle>
-          <CardDescription>Login to continue</CardDescription>
-          <CardAction>
-            <Button variant="link" onClick={(e) => navigate("/signup")}>
+      <div className="w-full max-w-md rounded-xl border bg-background shadow-sm">
+        {/*  Card Header */}
+        <div class="flex items-start justify-between p-6 pb-4">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight">Login</h2>
+            <p className="text-sm text-muted-foreground">
+              Login to continue
+            </p>
+          </div>
+
+            <button variant="button" onClick={(e) => navigate("/signup")}
+            className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+              >
               Signup
-            </Button>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
+            </button>
+        </div>
+        {/* Card Content */}
+        <div className="px-6">
           <form>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                <Label>Email</Label>
-                <Input
+                <label htmlFor="email" className="text-sm font-medium">
+                  Email
+                </label>
+                <input
+                  id="email"
                   type="text"
                   placeholder="email"
                   autoComplete="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (error) setError(null);
+                  }}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 />
               </div>
 
               <div className="grid gap-2">
-                <Label>Password</Label>
-                <Input
+                <label htmlFor="password" className="text-sm font-medium">
+                  Password
+                </label>
+                <input
                   name="password"
                   placeholder="password"
                   type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (error) setError(null);
+                  }}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 />
               </div>
             </div>
           </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button
+        </div>
+
+        {/* Card Footer */}
+        <div className="flex flex-col gap-2 p-6 pt-4">
+          <button
             type="button"
             variant="outline"
-            className="w-full"
             onClick={() => setShowPassword((prev) => !prev)}
+            className="inline-flex h-10 w-full items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm hover:bg-accent"
           >
             {showPassword ? "Hide" : "Show"}
-          </Button>
+          </button>
 
           {loading ? (
             <div className="flex flex-col items-center gap-3">
@@ -111,23 +131,31 @@ export default function Login() {
               <p className="text-sm text-muted-foreground">Logging in...</p>
             </div>
           ) : (
-            <Button
-             className="w-full" type="submit" disabled={loading}
-             onClick={handleSubmit}
+            <button
+              type="submit"
+              disabled={loading || (!email ||!password)}
+              onClick={handleSubmit}
+              className="inline-flex h-10 w-full items-center justify-center rounded-md bg-black px-4 py-2 text-sm font-medium text-white 
+              border
+              hover:opacity-90 
+              hover:bg-accent
+              disabled:cursor-not-allowed disabled:opacity-50"
             >
               Login
-            </Button>
+            </button>
           )}
 
           {error && (
-            <Alert variant="destructive" className="w-full">
-              <AlertCircleIcon />
-              <AlertTitle>Login failed</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
+            <div className="flex w-full gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+              <AlertCircleIcon className="h-5 w-5 shrink-0" />
+              <div>
+                <h4 className="font-medium">Login failed</h4>
+                <p className="mt-1 text-sm">{error}</p>
+              </div>
+            </div>
           )}
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
