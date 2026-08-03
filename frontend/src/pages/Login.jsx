@@ -2,19 +2,6 @@ import { useState } from "react";
 import { useAuth } from "../AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios.js";
-
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
 import { Loader2 } from "lucide-react";
 
 import { AlertCircleIcon } from "lucide-react";
