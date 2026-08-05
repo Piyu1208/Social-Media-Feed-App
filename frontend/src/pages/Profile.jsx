@@ -2,17 +2,24 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext.jsx";
 import api from "../api/axios.js";
 import UserPost from "../components/UserPost.jsx";
-import { Users, UserPlus, FileText } from "lucide-react";
+import { Loader2, FileText } from "lucide-react";
 
 export default function Profile() {
-  const { user, setAuth } = useAuth();
+  const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   if (!user) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   const fetchProfile = async () => {
@@ -52,7 +59,10 @@ export default function Profile() {
   if (loading) {
     return (
       <div className="flex justify-center py-12">
-        <p className="text-muted-foreground">Loading profile...</p>
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Loading profile...</p>
+        </div>
       </div>
     );
   }
