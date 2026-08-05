@@ -2,17 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../AuthContext.jsx";
 import api from "../api/axios.js";
 import { useNavigate } from "react-router-dom";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldLabel,
-} from "@/components/ui/field";
-
 import { Loader2 } from "lucide-react";
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
 import { AlertCircleIcon } from "lucide-react";
 
 export default function CompleteProfile() {
@@ -96,49 +86,63 @@ export default function CompleteProfile() {
               )}
             </div>
 
-            <Input
+            <input
               type="file"
               accept="image/*"
               onChange={handleFileChange}
               disabled={loading}
-              className="max-w-xs"
+              className="max-w-xs flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:ring-1 focus:ring-offset-1"
             />
           </div>
 
           {/* Username */}
-          <Field className="w-full">
-            <FieldLabel>Username</FieldLabel>
-            <Input
+          <div className="w-full">
+            <label htmlFor="username"
+            className="text-sm font-medium"
+            >Username</label>
+            <input
+              id="email"
               type="text"
               placeholder="user123"
               value={username}
               disabled={loading}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {setUsername(e.target.value);
+                if (error) setError(null);
+              }}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:ring-1 focus:ring-offset-1"
             />
-          </Field>
+          </div>
 
           {/* Submit */}
           {loading ? (
             <div className="flex flex-col items-center gap-3">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              <p className="text-sm text-muted-foreground">Creating profile...</p>
+              <p className="text-sm text-muted-foreground">
+                Creating profile...
+              </p>
             </div>
           ) : (
-            <Button
+            <button
               type="submit"
               disabled={loading || username.trim() === ""}
-              className="w-full"
+              className="inline-flex h-10 w-full items-center justify-center rounded-md bg-black px-4 py-2 text-sm font-medium text-white 
+              border
+              hover:opacity-90 
+              hover:bg-accent
+              disabled:cursor-not-allowed disabled:opacity-50"
             >
               Create Profile
-            </Button>
+            </button>
           )}
 
           {error && (
-            <Alert variant="destructive" className="w-full">
-              <AlertCircleIcon className="h-4 w-4" />
-              <AlertTitle>Profile creation failed</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
+            <div className="flex w-full gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+              <AlertCircleIcon className="h-5 w-5 shrink-0" />
+              <div>
+                <h4 className="font-medium">Profile creation failed</h4>
+                <p className="mt-1 text-sm">{error}</p>
+              </div>
+            </div>
           )}
         </form>
       </div>
