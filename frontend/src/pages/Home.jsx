@@ -1,27 +1,18 @@
 import { useAuth } from "../AuthContext.jsx";
-import Navbar from "../components/Navbar.jsx";
 import api from "../api/axios.js";
 import { useState, useEffect } from "react";
 import PostCard from "../components/PostCard.jsx";
-import { useNavigate } from "react-router-dom";
-
+import { Loader2, AlertCircleIcon } from "lucide-react";
 
 export default function Home() {
-  const { user, setAuth } = useAuth();
+  const { user } = useAuth();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
-
-  //const navigate = useNavigate();
 
   if (!user) {
-    return (
-      <div>Loading...</div>
-    );
+    return <div>Loading...</div>;
   }
-
-
 
   useEffect(() => {
     fetchFeed();
@@ -41,37 +32,43 @@ export default function Home() {
     }
   };
 
-  
-
-
-
-
-
   return (
     <>
-      {/*<Navbar />*/}
-
-      {error && <p>{error}</p>}
+      {error && (
+        <div className="flex w-full gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+          <AlertCircleIcon className="h-5 w-5 shrink-0" />
+          <div>
+            <h4 className="font-medium">Fetch failed</h4>
+            <p className="mt-1 text-sm">{error}</p>
+          </div>
+        </div>
+      )}
 
       <div>
-        <div className="mx-auto flex max-w-xl flex-col gap-6 px-4 py-6">
-          {posts.length > 0 &&
-            posts.map((post) => (
-              <PostCard
-                key={post._id}
-                id={post._id}
-                profilePicture={post.author.profilePicture}
-                username={post.author.username}
-                caption={post.caption}
-                images={post.images}
-                likes={post.likes.length}
-                isLiked={post.likes.includes(user?._id)}
-                comments={post.commentCount}
-                setError={setError}
-              />
-
-            ))}
-        </div>
+        {loading ? (
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-sm text-muted-foreground">Fetching feed...</p>
+          </div>
+        ) : (
+          <div className="mx-auto flex max-w-xl flex-col gap-6 px-4 py-6">
+            {posts.length > 0 &&
+              posts.map((post) => (
+                <PostCard
+                  key={post._id}
+                  id={post._id}
+                  profilePicture={post.author.profilePicture}
+                  username={post.author.username}
+                  caption={post.caption}
+                  images={post.images}
+                  likes={post.likes.length}
+                  isLiked={post.likes.includes(user?._id)}
+                  comments={post.commentCount}
+                  setError={setError}
+                />
+              ))}
+          </div>
+        )}
       </div>
     </>
   );
