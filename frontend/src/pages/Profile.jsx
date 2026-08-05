@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext.jsx";
 import api from "../api/axios.js";
 import UserPost from "../components/UserPost.jsx";
-import { Loader2, FileText } from "lucide-react";
+import { Loader2, FileText, AlertCircleIcon } from "lucide-react";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -69,10 +69,12 @@ export default function Profile() {
 
   if (error) {
     return (
-      <div className="mx-auto max-w-xl p-6">
-        <p className="rounded-lg border border-red-300 bg-red-50 p-4 text-red-600">
-          {error}
-        </p>
+      <div className="flex w-full gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+        <AlertCircleIcon className="h-5 w-5 shrink-0" />
+        <div>
+          <h4 className="font-medium">Fetch failed</h4>
+          <p className="mt-1 text-sm">{error}</p>
+        </div>
       </div>
     );
   }
