@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { Heart, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import api from "../api/axios.js";
 import { useNavigate } from "react-router-dom";
@@ -70,15 +71,17 @@ export default function PostCard({
     <div className="w-full max-w-md overflow-hidden border bg-background shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between p-4">
-        <div className="flex items-center gap-3">
-          <img
-            src={profilePicture?.url}
-            alt={username}
-            className="h-10 w-10 rounded-full border object-cover"
-          />
+        <Link to={`/visit-profile/${username}`}>
+          <div className="flex items-center gap-3">
+            <img
+              src={profilePicture?.url}
+              alt={username}
+              className="h-10 w-10 rounded-full border object-cover"
+            />
 
-          <h3 className="text-base font-semibold">{username}</h3>
-        </div>
+            <h3 className="text-base font-semibold">{username}</h3>
+          </div>
+        </Link>
       </div>
 
       {/* Images */}
