@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import VisitUserPost from "../components/VisitUserPost.jsx";
 import { useAuth } from "../AuthContext.jsx";
 import api from "../api/axios.js";
-import { FileText } from "lucide-react";
+import { FileText, Loader2 } from "lucide-react";
 
 export default function VisitProfile() {
   const [loading, setLoading] = useState(false);
@@ -58,11 +58,28 @@ export default function VisitProfile() {
   };
 
   if (loading) {
-    return <div>Fetching profile...</div>;
+    return (
+      <div>
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Logging in...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <div>
+        <div className="flex w-full gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+          <AlertCircleIcon className="h-5 w-5 shrink-0" />
+          <div>
+            <h4 className="font-medium">Login failed</h4>
+            <p className="mt-1 text-sm">{error}</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!profile) {
@@ -132,7 +149,9 @@ export default function VisitProfile() {
 
       {/* Posts */}
       <div className="mt-8">
-        <h2 className="mb-6 text-xl font-semibold">{profile.username}'s posts</h2>
+        <h2 className="mb-6 text-xl font-semibold">
+          {profile.username}'s posts
+        </h2>
 
         {posts?.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">

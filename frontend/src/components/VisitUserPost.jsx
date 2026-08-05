@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heart, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
-import { MoreVertical, Trash2 } from "lucide-react";
 import api from "../api/axios.js";
 
 export default function VisitUserPost({
@@ -150,7 +149,7 @@ export default function VisitUserPost({
             onClick={() => navigate(`/post/${id}`)}
             className="flex flex-1 items-center justify-end gap-2"
           >
-            <MessageCircle className="h-5 w-5" />
+            <MessageCircle className="h-5 w-5 hover:text-gray-400" />
             <span>{comments}</span>
           </button>
         </div>
