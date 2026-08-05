@@ -1,16 +1,4 @@
 import { useState, useRef } from "react";
-
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
 import { Heart, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import api from "../api/axios.js";
 import { useNavigate } from "react-router-dom";

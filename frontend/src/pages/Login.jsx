@@ -2,9 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios.js";
-import { Loader2 } from "lucide-react";
-
-import { AlertCircleIcon } from "lucide-react";
+import { Loader2, AlertCircleIcon } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
