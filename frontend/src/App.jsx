@@ -13,6 +13,7 @@ import CreatePost from "./pages/CreatePost.jsx";
 import Navbar from "./components/Navbar.jsx";
 import SearchUser from "./pages/SearchUser.jsx";
 import VisitProfile from "./pages/VisitProfile.jsx";
+import EditProfile from "./pages/EditProfile.jsx";
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
       <Route path="/create-post" element={<CreatePost />} />
       <Route path="/search" element={<SearchUser />}/>
       <Route path="/visit-profile/:username" element={<VisitProfile />}  />
+      <Route path="edit-profile" element={<EditProfile />} />
     </Routes>
     </BrowserRouter>
     </>
