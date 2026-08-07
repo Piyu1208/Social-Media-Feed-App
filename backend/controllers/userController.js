@@ -42,6 +42,50 @@ export const getMe = async (req, res, next) => {
   }
 }
 
+export const searchUsers = async (req, res, next) => {
+  try {
+    const query = req.query.q?.trim();
+
+    if (!query) {
+      return res.status(400).json({
+        message: "Search query is required.",
+      });
+    }
+
+    const users = await User.find({
+      username: {
+        $regex: query,
+        $options: "i",
+      },
+    }).select(
+      "_id username bio profilePicture followers"
+    )
+    .limit(20)
+    .lean();
+
+    const results = users.map((profile) => ({
+      _id: profile._id,
+      username: profile.username,
+      bio: profile.bio,
+      profilePicture: profile.profilePicture,
+
+      isFollowing: profile.followers.some(
+        (id) => id.toString() === req.user._id.toString()
+      ),
+    }));
+
+    return res.status(200).json({
+      success: true,
+      users: results,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
 export const visitProfile = async (req, res, next) => {
   try {
     let username = req.params.username;
@@ -115,7 +159,7 @@ export const updateProfile = async (req, res, next) => {
 
     if (req.file) {
       const result = await uploadToCloudinary(req.file.path);
-      
+
       if (user.profilePicture?.public_id) {
         await deleteFromCloudinary(user.profilePicture.public_id);
       }
