@@ -94,18 +94,31 @@ export const updateProfile = async (req, res, next) => {
       });
     }
 
-    //Fields to update
-    let updateData = {
-      username, bio,
-    };
+    const updateData = {};
+
+    if (username !== undefined) {
+      const usernameUser = await User.findOne({ 
+        username: username,
+        _id: { $ne: req.user._id }, 
+      });
+
+      if (usernameUser) {
+        throw new AppError("Username already in use.", 400);
+      }
+
+      updateData.username = username;
+    }
+
+    if (bio !== undefined) {
+      updateData.bio = bio;
+    }
 
     if (req.file) {
-
+      const result = await uploadToCloudinary(req.file.path);
+      
       if (user.profilePicture?.public_id) {
         await deleteFromCloudinary(user.profilePicture.public_id);
       }
-
-      const result = await uploadToCloudinary(req.file.path);
 
       updateData.profilePicture = {
         public_id: result.public_id,
