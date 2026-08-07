@@ -3,6 +3,8 @@ import { useAuth } from "../AuthContext.jsx";
 import api from "../api/axios.js";
 import UserPost from "../components/UserPost.jsx";
 import { Loader2, FileText, AlertCircleIcon } from "lucide-react";
+import { Pencil } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -106,6 +108,13 @@ export default function Profile() {
                     </p>
                   )}
                 </div>
+                <Link
+                  to="/edit-profile"
+                  className="inline-flex items-center gap-2 rounded-lg border px-2 py-2 text-sm font-sm transition hover:bg-muted"
+                >
+                  <Pencil className="h-3 w-3" />
+                  Edit Profile
+                </Link>
               </div>
             </div>
 
