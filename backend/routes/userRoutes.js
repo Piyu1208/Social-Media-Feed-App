@@ -11,7 +11,7 @@ router.get("/users/auth/me", me);
 router.get("/users/me", getMe);
 
 router.get("/users/:username", visitProfile);
-router.patch("/users/profile", upload.single("file"), updateProfile);
+router.patch("/users/profile", upload.single("profilePicture"), updateProfile);
 
 router.patch("/users/:id/follow", follow);
 router.delete("/users/:id/follow", unfollow)
