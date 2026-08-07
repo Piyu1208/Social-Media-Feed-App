@@ -101,7 +101,7 @@ export default function CompleteProfile() {
             className="text-sm font-medium"
             >Username</label>
             <input
-              id="email"
+              id="username"
               type="text"
               placeholder="user123"
               value={username}
